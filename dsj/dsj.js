@@ -251,17 +251,23 @@ function wx_tasks(tkcode) {
 function wx_dotask(code) {
     return new Promise((resolve, reject) => {
         let url = {
-            url: `https://123.56.125.184/api/v4/task/complete?code=${code}&comType=1`,
+            url: `https://47.95.69.248/api/v4/task/complete?code=${code}&comType=1`,
             headers: JSON.parse(`{"userid":"${JSON.parse(current_dsj_header).userid}","authorization":"${JSON.parse(current_dsj_header).authorization}","appid":"3c3065a6f979f9b2b49e98ea1d02f313","Host":"123.56.125.184","content-type":"application/x-www-form-urlencoded","Referer":"https://servicewechat.com/wx9e8718eb2360dfb8/109/page-frame.html"}`)
         }
         $.get(url, (error, response, data) => {
             //console.log(data)
-            let result = JSON.parse(data)
-            if (result.errCode == 0) {
-                console.log('\n【微信任务代码】：' + code + '，获得金币:' + result.data.getCoin)
-            } else {
-                console.log('\n【微信任务代码】: ' + code + '，' + result.msg)
+            if (data == null) {
+                console.log('\n【微信任务代码】: ' + code + '，错误！')
             }
+            else {
+                let result = JSON.parse(data)
+                if (result.errCode == 0) {
+                    console.log('\n【微信任务代码】：' + code + '，获得金币:' + result.data.getCoin)
+                } else {
+                    console.log('\n【微信任务代码】: ' + code + '，' + result.msg)
+                }
+            }
+
             resolve()
         })
     })
@@ -372,7 +378,8 @@ function dsj_rwzt() {
 function video() {
     return new Promise((resolve, reject) => {
         let url = {
-            url: `${dianshijia_API}/v7/task/complete?code=task_xiaoman&comType=0`,
+            // url: `${dianshijia_API}/v7/task/complete?code=task_xiaoman&comType=0`,
+            url: `${dianshijia_API}/v5/task/complete?code=ShortvideoPlay&comType=0`,
             headers: JSON.parse(current_dsj_header),
         }
         $.get(url, async (err, resp, data) => {
@@ -432,12 +439,15 @@ function signin() {
 function dsj_led() {
     return new Promise((resolve, reject) => {
         let url = {
-            url: `http://123.56.125.184/api/sign/chooseAdditionalReward?rewardId=${current_reward_id}`,
+            url: `${dianshijia_API}/sign/chooseAdditionalReward?rewardId=${current_reward_id}`,
             headers: JSON.parse(current_dsj_header),
         }
         $.get(url, (error, response, data) => {
             //console.log(data)
-            resolve()
+            if (JSON.parse(data).errCode == 0)
+                resolve()
+            else
+                console.log("领取失败");
         })
     })
 }
